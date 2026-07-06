@@ -13,7 +13,7 @@ public class PasswordManager {
 	}
 	
 	public List<PasswordEntry> getEntries(){
-		return entries;
+		return new ArrayList<>(entries);
 	}
 	
 	public PasswordEntry searchByServiceName(String serviceName) {
@@ -26,13 +26,8 @@ public class PasswordManager {
 	}
 	
 	public boolean removeEntry(String serviceName) {
-		for(PasswordEntry entry : entries) {
-			if(entry.getServiceName().equalsIgnoreCase(serviceName)) {
-				entries.remove(entry);
-				return true;
-			}
-		}
-		return false;
+		return entries.removeIf(entry -> 
+		entry.getServiceName().equalsIgnoreCase(serviceName)
+		);
 	}
-	
 }

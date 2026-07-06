@@ -9,6 +9,9 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		PasswordManager manager = new PasswordManager();
+		
+		int menu = -1;
+		
 		while(true) {
 			System.out.println("==== パスワード管理ツール ====");
 			System.out.println("1. 登録");
@@ -18,7 +21,12 @@ public class Main {
 			System.out.println("5. 終了");
 			System.out.println("選択してください:");
 			
-			int menu = scanner.nextInt();
+			try {	
+				menu = Integer.parseInt(scanner.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println("数字(1-5)を入力してください");
+				continue;
+			}
 			
 			switch(menu) {
 			case 1:
@@ -51,7 +59,6 @@ public class Main {
 	}
 	
 	private static void registerPassword(Scanner scanner, PasswordManager manager) {
-		scanner.nextLine();//改行
 		
 		System.out.println("サービス名:");
 		String serviceName = scanner.nextLine();
@@ -79,9 +86,8 @@ public class Main {
 	}
 	
 	private static void searchPassword(Scanner scanner, PasswordManager manager) {
-		scanner.nextLine();
 		
-		System.out.println("検索するサービス名");
+		System.out.print("検索するサービス名: ");
 		String serviceName = scanner.nextLine();
 		
 		PasswordEntry result = manager.searchByServiceName(serviceName);
@@ -101,7 +107,6 @@ public class Main {
 	}
 
 	private static void deletePassword(Scanner scanner, PasswordManager manager) {
-		scanner.nextLine();
 	
 		System.out.print("削除するサービス名: ");
 		String serviceName = scanner.nextLine();
