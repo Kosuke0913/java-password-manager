@@ -14,7 +14,8 @@ public class Main {
 			System.out.println("1. 登録");
 			System.out.println("2. 一覧表示");
 			System.out.println("3. 検索");
-			System.out.println("4. 終了");
+			System.out.println("4. 削除");
+			System.out.println("5. 終了");
 			System.out.println("選択してください:");
 			
 			int menu = scanner.nextInt();
@@ -31,14 +32,18 @@ public class Main {
 			case 3: 
 				searchPassword(scanner, manager);
 				break;
-			
+				
 			case 4:
+				deletePassword(scanner, manager);
+				break;
+			
+			case 5:
 				System.out.println("終了します。");
 				scanner.close();
 				return;
 			
 			default:
-				System.out.println("1-4を入力してください。");
+				System.out.println("1-5を入力してください。");
 			}
 			
 			System.out.println();
@@ -93,5 +98,30 @@ public class Main {
 		System.out.println("サービス名:" + entry.getServiceName());
 		System.out.println("ユーザー名" + entry.getUserName());
 		System.out.println("パスワード" + entry.getPassword());
+	}
+
+	private static void deletePassword(Scanner scanner, PasswordManager manager) {
+		scanner.nextLine();
+	
+		System.out.print("削除するサービス名: ");
+		String serviceName = scanner.nextLine();
+		
+		PasswordEntry result = manager.searchByServiceName(serviceName);
+		
+		if(result != null) {
+			displayEntry(result);
+			
+			System.out.println("本当に削除しますか？(y/n)");
+			String answer = scanner.nextLine();
+			
+			if(answer.equalsIgnoreCase("y")){
+				manager.removeEntry(serviceName);
+				System.out.println("削除しました。");
+			} else {
+				System.out.println("削除をキャンセルしました。");
+			}
+		} else {
+			System.out.println("見つかりませんでした。");
+		}
 	}
 }
