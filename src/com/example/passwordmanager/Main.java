@@ -5,11 +5,15 @@ import java.util.Scanner;
 
 import com.example.passwordmanager.model.PasswordEntry;
 import com.example.passwordmanager.service.PasswordManager;
+import com.example.passwordmanager.util.FileManager;
 
 public class Main {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		PasswordManager manager = new PasswordManager();
+		FileManager fileManager = new FileManager();
+		
+		fileManager.load(manager);
 		
 		int menu = -1;
 		
@@ -52,6 +56,7 @@ public class Main {
 				break;
 			
 			case 6:
+				fileManager.save(manager.getEntries());
 				System.out.println("終了します。");
 				scanner.close();
 				return;
