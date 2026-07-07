@@ -132,27 +132,12 @@ public class Main {
 		
 		List<PasswordEntry> result = manager.searchByServiceName(serviceName);
 		
+		PasswordEntry selected = selectEntry(scanner, result);
 		
-		if(result.isEmpty()) {
-			System.out.println("見つかりませんでした。");
-			return;
-		}
-		for(int i = 0; i < result.size(); i++) {
-			System.out.println("[" + (i + 1) + "]");
-			displayEntry(result.get(i));
-		}
-		
-		System.out.print("番号を選択してください: ");
-		int number = scanner.nextInt();
-		scanner.nextLine();
-		if(number < 1 || number > result.size()) {
-			System.out.println("番号が正しくありません。");
+		if(selected == null) {
 			return;
 		}
 		
-		PasswordEntry selected = result.get(number-1);
-		System.out.println("選ばれたエントリー:");
-		displayEntry(selected);
 		System.out.println("本当に削除しますか？(y/n)");
 		String answer = scanner.nextLine();
 		
@@ -170,27 +155,12 @@ public class Main {
 		
 		List<PasswordEntry> result = manager.searchByServiceName(serviceName);
 		
+		PasswordEntry selected = selectEntry(scanner, result);
 		
-		if(result.isEmpty()) {
-			System.out.println("見つかりませんでした。");
-			return;
-		}
-		for(int i = 0; i < result.size(); i++) {
-			System.out.println("[" + (i + 1) + "]");
-			displayEntry(result.get(i));
+		if (selected == null) {
+		    return;
 		}
 		
-		System.out.print("番号を選択してください: ");
-		int number = scanner.nextInt();
-		scanner.nextLine();
-		if(number < 1 || number > result.size()) {
-			System.out.println("番号が正しくありません。");
-			return;
-		}
-		
-		PasswordEntry selected = result.get(number-1);
-		System.out.println("選ばれたエントリー:");
-		displayEntry(selected);
 		System.out.print("更新するユーザー名: ");
 		String newUserName = scanner.nextLine();
 		
@@ -199,5 +169,34 @@ public class Main {
 		
 		manager.updateEntry(selected, newUserName, newPassword);
 		System.out.println("更新しました。");
+	}
+	
+	private static PasswordEntry selectEntry(Scanner scanner, List<PasswordEntry> result) {
+		
+		if(result.isEmpty()) {
+			System.out.println("見つかりませんでした。");
+			return null;
+		}
+		
+		for(int i = 0; i < result.size(); i++) {
+			System.out.println("[" + (i + 1) + "]");
+			displayEntry(result.get(i));
+			System.out.println();
+		}
+		
+		System.out.print("番号を選択してください: ");
+		int number = scanner.nextInt();
+		scanner.nextLine();
+		if(number < 1 || number > result.size()) {
+			System.out.println("番号が正しくありません。");
+			return null;
+		}
+		
+		PasswordEntry selected = result.get(number-1);
+		
+		System.out.println("選ばれたエントリー:");
+		displayEntry(selected);
+		
+		return selected;
 	}
 }
