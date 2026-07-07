@@ -107,12 +107,14 @@ public class Main {
 		System.out.print("検索するサービス名: ");
 		String serviceName = scanner.nextLine();
 		
-		PasswordEntry result = manager.searchByServiceName(serviceName);
+		List<PasswordEntry> result = manager.searchByServiceName(serviceName);
 		
-		if(result != null) {
-			displayEntry(result);
-		} else {
+		if(result.isEmpty()) {
 			System.out.println("見つかりませんでした。");
+			return;
+		}
+		for(PasswordEntry entry : result) {
+			displayEntry(entry);
 		}
 	}
 	
@@ -128,22 +130,37 @@ public class Main {
 		System.out.print("削除するサービス名: ");
 		String serviceName = scanner.nextLine();
 		
-		PasswordEntry result = manager.searchByServiceName(serviceName);
+		List<PasswordEntry> result = manager.searchByServiceName(serviceName);
 		
-		if(result != null) {
-			displayEntry(result);
-			
-			System.out.println("本当に削除しますか？(y/n)");
-			String answer = scanner.nextLine();
-			
-			if(answer.equalsIgnoreCase("y")){
-				manager.removeEntry(serviceName);
-				System.out.println("削除しました。");
-			} else {
-				System.out.println("削除をキャンセルしました。");
-			}
-		} else {
+		
+		if(result.isEmpty()) {
 			System.out.println("見つかりませんでした。");
+			return;
+		}
+		for(int i = 0; i < result.size(); i++) {
+			System.out.println("[" + (i + 1) + "]");
+			displayEntry(result.get(i));
+		}
+		
+		System.out.print("番号を選択してください: ");
+		int number = scanner.nextInt();
+		scanner.nextLine();
+		if(number < 1 || number > result.size()) {
+			System.out.println("番号が正しくありません。");
+			return;
+		}
+		
+		PasswordEntry selected = result.get(number-1);
+		System.out.println("選ばれたエントリー:");
+		displayEntry(selected);
+		System.out.println("本当に削除しますか？(y/n)");
+		String answer = scanner.nextLine();
+		
+		if(answer.equalsIgnoreCase("y")){
+			manager.removeEntry(selected);
+			System.out.println("削除しました。");
+		} else {
+			System.out.println("削除をキャンセルしました。");
 		}
 	}
 	
@@ -151,25 +168,36 @@ public class Main {
 		System.out.print("更新するサービス名: ");
 		String serviceName = scanner.nextLine();
 		
-		PasswordEntry entry = manager.searchByServiceName(serviceName);
+		List<PasswordEntry> result = manager.searchByServiceName(serviceName);
 		
-		if(entry == null) {
+		
+		if(result.isEmpty()) {
 			System.out.println("見つかりませんでした。");
 			return;
 		}
+		for(int i = 0; i < result.size(); i++) {
+			System.out.println("[" + (i + 1) + "]");
+			displayEntry(result.get(i));
+		}
 		
-		displayEntry(entry);
+		System.out.print("番号を選択してください: ");
+		int number = scanner.nextInt();
+		scanner.nextLine();
+		if(number < 1 || number > result.size()) {
+			System.out.println("番号が正しくありません。");
+			return;
+		}
 		
+		PasswordEntry selected = result.get(number-1);
+		System.out.println("選ばれたエントリー:");
+		displayEntry(selected);
 		System.out.print("更新するユーザー名: ");
 		String newUserName = scanner.nextLine();
 		
 		System.out.print("更新するパスワード: ");
 		String newPassword = scanner.nextLine();
 		
-		boolean updated = manager.updateEntry(serviceName, newUserName, newPassword);
-		
-		if(updated) {
-			System.out.println("更新しました。");
-		}
+		manager.updateEntry(selected, newUserName, newPassword);
+		System.out.println("更新しました。");
 	}
 }

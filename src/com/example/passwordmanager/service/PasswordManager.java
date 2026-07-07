@@ -16,28 +16,22 @@ public class PasswordManager {
 		return new ArrayList<>(entries);
 	}
 	
-	public PasswordEntry searchByServiceName(String serviceName) {
+	public List<PasswordEntry> searchByServiceName(String serviceName) {
+		List<PasswordEntry> result = new ArrayList<>();
 		for(PasswordEntry entry : entries) {
 			if(entry.getServiceName().equalsIgnoreCase(serviceName)) {
-				return entry;
+				result.add(entry);
 			}
 		}
-		return null;
+		return result;
 	}
 	
-	public boolean removeEntry(String serviceName) {
-		return entries.removeIf(entry -> 
-		entry.getServiceName().equalsIgnoreCase(serviceName)
-		);
+	public boolean removeEntry(PasswordEntry entry) {
+		return entries.remove(entry);
 	}
 	
-	public boolean updateEntry(String serviceName, String newUserName, String newPassword) {
-		PasswordEntry entry = searchByServiceName(serviceName);
-		if(entry != null) {
-			entry.setUserName(newUserName);
-			entry.setPassword(newPassword);
-			return true;
-		}
-		return false;
+	public void updateEntry(PasswordEntry entry, String newUserName, String newPassword) {
+		entry.setUserName(newUserName);
+		entry.setPassword(newPassword);
 	}
 }
