@@ -1,5 +1,6 @@
 package com.example.passwordmanager;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.example.passwordmanager.model.PasswordEntry;
@@ -17,14 +18,15 @@ public class Main {
 			System.out.println("1. 登録");
 			System.out.println("2. 一覧表示");
 			System.out.println("3. 検索");
-			System.out.println("4. 削除");
-			System.out.println("5. 終了");
+			System.out.println("4. 更新");
+			System.out.println("5. 削除");
+			System.out.println("6. 終了");
 			System.out.println("選択してください:");
 			
 			try {	
 				menu = Integer.parseInt(scanner.nextLine());
 			} catch (NumberFormatException e) {
-				System.out.println("数字(1-5)を入力してください");
+				System.out.println("数字(1-6)を入力してください");
 				continue;
 			}
 			
@@ -41,17 +43,21 @@ public class Main {
 				searchPassword(scanner, manager);
 				break;
 				
-			case 4:
+			case 4: 
+				updatePassword(scanner, manager);
+				break;
+				
+			case 5:
 				deletePassword(scanner, manager);
 				break;
 			
-			case 5:
+			case 6:
 				System.out.println("終了します。");
 				scanner.close();
 				return;
 			
 			default:
-				System.out.println("1-5を入力してください。");
+				System.out.println("1-6を入力してください。");
 			}
 			
 			System.out.println();
@@ -80,7 +86,13 @@ public class Main {
 	}
 	
 	private static void displayEntries(PasswordManager manager) {
-		for(PasswordEntry entry : manager.getEntries()) {
+		List<PasswordEntry> entries = manager.getEntries();
+		
+		if(entries.isEmpty()) {
+			System.out.println("登録されているデータはありません。");
+			return;
+		}
+		for(PasswordEntry entry : entries){
 			displayEntry(entry);
 		}
 	}
@@ -127,6 +139,32 @@ public class Main {
 			}
 		} else {
 			System.out.println("見つかりませんでした。");
+		}
+	}
+	
+	private static void updatePassword(Scanner scanner, PasswordManager manager) {
+		System.out.print("更新するサービス名: ");
+		String serviceName = scanner.nextLine();
+		
+		PasswordEntry entry = manager.searchByServiceName(serviceName);
+		
+		if(entry == null) {
+			System.out.println("見つかりませんでした。");
+			return;
+		}
+		
+		displayEntry(entry);
+		
+		System.out.print("更新するユーザー名: ");
+		String newUserName = scanner.nextLine();
+		
+		System.out.print("更新するパスワード: ");
+		String newPassword = scanner.nextLine();
+		
+		boolean updated = manager.updateEntry(serviceName, newUserName, newPassword);
+		
+		if(updated) {
+			System.out.println("更新しました。");
 		}
 	}
 }

@@ -30,4 +30,14 @@ public class PasswordManager {
 		entry.getServiceName().equalsIgnoreCase(serviceName)
 		);
 	}
+	
+	public boolean updateEntry(String serviceName, String newUserName, String newPassword) {
+		PasswordEntry entry = searchByServiceName(serviceName);
+		if(entry != null) {
+			entry.setUserName(newUserName);
+			entry.setPassword(newPassword);
+			return true;
+		}
+		return false;
+	}
 }
