@@ -98,7 +98,7 @@ public class Main {
 			return;
 		}
 		for(PasswordEntry entry : entries){
-			displayEntry(entry);
+			displayEntry(entry, false);
 		}
 	}
 	
@@ -114,15 +114,20 @@ public class Main {
 			return;
 		}
 		for(PasswordEntry entry : result) {
-			displayEntry(entry);
+			displayEntry(entry, true);
 		}
 	}
 	
-	private static void displayEntry(PasswordEntry entry) {
+	private static void displayEntry(PasswordEntry entry, boolean showPassword) {
 		System.out.println("-------------------------");
 		System.out.println("サービス名:" + entry.getServiceName());
-		System.out.println("ユーザー名" + entry.getUserName());
-		System.out.println("パスワード" + entry.getPassword());
+		System.out.println("ユーザー名:" + entry.getUserName());
+		
+		if(showPassword) {
+			System.out.println("パスワード:" + entry.getPassword());
+		} else {
+			System.out.println("パスワード:********");
+		}
 	}
 
 	private static void deletePassword(Scanner scanner, PasswordManager manager) {
@@ -180,7 +185,7 @@ public class Main {
 		
 		for(int i = 0; i < result.size(); i++) {
 			System.out.println("[" + (i + 1) + "]");
-			displayEntry(result.get(i));
+			displayEntry(result.get(i), false);
 			System.out.println();
 		}
 		
@@ -195,7 +200,7 @@ public class Main {
 		PasswordEntry selected = result.get(number-1);
 		
 		System.out.println("選ばれたエントリー:");
-		displayEntry(selected);
+		displayEntry(selected, false);
 		
 		return selected;
 	}
