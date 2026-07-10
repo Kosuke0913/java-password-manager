@@ -29,13 +29,13 @@ public class Main {
 			System.out.println("5. 削除");
 			System.out.println("6. サービス一覧");
 			System.out.println("7. パスワード生成");
-			System.out.println("8. パスワード生成");
+			System.out.println("8. 終了");
 			System.out.println("選択してください:");
 			
 			try {	
 				menu = Integer.parseInt(scanner.nextLine());
 			} catch (NumberFormatException e) {
-				System.out.println("数字(1-6)を入力してください");
+				System.out.println("数字(1-8)を入力してください");
 				continue;
 			}
 			
@@ -75,7 +75,7 @@ public class Main {
 				return;
 			
 			default:
-				System.out.println("1-6を入力してください。");
+				System.out.println("1-8を入力してください。");
 			}
 			
 			System.out.println();
@@ -231,7 +231,7 @@ public class Main {
 		}
 	}
 	
-	private static void generatePassword(Scanner scanner, PasswordGenerator generator){
+	private static void generatePassword(Scanner scanner, PasswordGenerator generator, PasswordManager manager){
 		
 		try {
 			System.out.print("パスワードの長さ: ");
@@ -244,8 +244,32 @@ public class Main {
 			
 			System.out.println("生成されたパスワード:");
 			System.out.println(password);
+			System.out.print("このパスワードで登録しますか？(y/n): ");
+			String answer = scanner.nextLine();
+			
+			if(answer.equalsIgnoreCase("y")) {
+				System.out.println("サービス名:");
+				String serviceName = scanner.nextLine();
+				
+				System.out.println("ユーザー名:");
+				String userName = scanner.nextLine();
+				
+				PasswordEntry entry = new PasswordEntry(
+						serviceName,
+						userName,
+						password);
+					
+					manager.addEntry(entry);
+					
+					System.out.println("登録しました!");
+			}
+			else {
+				System.out.println("登録をキャンセルしました。");
+
+			}
 		} catch (NumberFormatException e) {
 			System.out.println("数字を入力してください");
 		}
 	}
+	
 }
