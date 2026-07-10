@@ -1,7 +1,9 @@
 package com.example.passwordmanager.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.passwordmanager.model.PasswordEntry;
 
@@ -33,5 +35,17 @@ public class PasswordManager {
 	public void updateEntry(PasswordEntry entry, String newUserName, String newPassword) {
 		entry.setUserName(newUserName);
 		entry.setPassword(newPassword);
+	}
+	
+	public Map<String, Integer> getServiceCounts() {
+		Map<String, Integer> serviceCounts = new HashMap<>();
+		
+		for(PasswordEntry entry : entries) {
+			String serviceName = entry.getServiceName();
+			int count = serviceCounts.getOrDefault(serviceName, 0);
+			serviceCounts.put(serviceName, count + 1);
+		}
+		
+		return serviceCounts;
 	}
 }

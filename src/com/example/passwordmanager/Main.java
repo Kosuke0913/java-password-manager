@@ -1,6 +1,7 @@
 package com.example.passwordmanager;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.example.passwordmanager.model.PasswordEntry;
@@ -22,9 +23,10 @@ public class Main {
 			System.out.println("1. 登録");
 			System.out.println("2. 一覧表示");
 			System.out.println("3. 検索");
-			System.out.println("4. 更新");
-			System.out.println("5. 削除");
-			System.out.println("6. 終了");
+			System.out.println("4. 検索");
+			System.out.println("5. 更新");
+			System.out.println("6. 削除");
+			System.out.println("7. 終了");
 			System.out.println("選択してください:");
 			
 			try {	
@@ -42,20 +44,24 @@ public class Main {
 			case 2: 
 				displayEntries(manager);
 				break;
+				
+			case 3:
+				displayServices(manager);
+				break;
 			
-			case 3: 
+			case 4: 
 				searchPassword(scanner, manager);
 				break;
 				
-			case 4: 
+			case 5: 
 				updatePassword(scanner, manager);
 				break;
 				
-			case 5:
+			case 6:
 				deletePassword(scanner, manager);
 				break;
 			
-			case 6:
+			case 7:
 				fileManager.save(manager.getEntries());
 				System.out.println("終了します。");
 				scanner.close();
@@ -203,5 +209,18 @@ public class Main {
 		displayEntry(selected, false);
 		
 		return selected;
+	}
+	
+	private static void displayServices(PasswordManager manager) {
+		Map<String, Integer> serviceCounts = manager.getServiceCounts();
+		
+		if(serviceCounts.isEmpty()) {
+			System.out.println("登録されているデータはありません。");
+			return;
+		}
+		System.out.println("==== 登録されているサービス ====");
+		for(Map.Entry<String, Integer> entry : serviceCounts.entrySet()) {
+			System.out.println( entry.getKey() + " (" + entry.getValue() + "件)");
+		}
 	}
 }
