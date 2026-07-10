@@ -7,6 +7,7 @@ import java.util.Scanner;
 import com.example.passwordmanager.model.PasswordEntry;
 import com.example.passwordmanager.service.PasswordManager;
 import com.example.passwordmanager.util.FileManager;
+import com.example.passwordmanager.util.MasterPasswordManager;
 import com.example.passwordmanager.util.PasswordGenerator;
 
 public class Main {
@@ -15,6 +16,27 @@ public class Main {
 		PasswordManager manager = new PasswordManager();
 		FileManager fileManager = new FileManager();
 		PasswordGenerator generator = new PasswordGenerator();
+		MasterPasswordManager masterManager = new MasterPasswordManager();
+		
+		if(!masterManager.exists()) {
+			System.out.println("マスターパスワードが設定されていません。");
+			System.out.println("新しいマスターパスワード:");
+			String masterpassword = scanner.nextLine();
+			masterManager.save(masterpassword);
+			System.out.println();
+			System.out.println();
+			System.out.println("設定しました。");
+		} else {
+			System.out.println("マスターパスワード:");
+			String masterPassword = scanner.nextLine();
+			if(masterPassword.equals(masterManager.load())) {
+				System.out.println("認証成功");
+			} else {
+				System.out.println("認証失敗");
+				scanner.close();
+				return;
+			}
+		}
 		
 		fileManager.load(manager);
 		
@@ -65,7 +87,7 @@ public class Main {
 				break;
 				
 			case 7:
-				generatePassword(scanner, generator);
+				generatePassword(scanner, generator, manager);
 				break;
 			
 			case 8:
