@@ -20,19 +20,11 @@ public class Main {
 		
 		if(!masterManager.exists()) {
 			System.out.println("マスターパスワードが設定されていません。");
-			System.out.println("新しいマスターパスワード:");
-			String masterpassword = scanner.nextLine();
-			masterManager.save(masterpassword);
-			System.out.println();
-			System.out.println();
+			String password = inputNewMasterPassword(scanner);
+			masterManager.save(password);
 			System.out.println("設定しました。");
 		} else {
-			System.out.println("マスターパスワード:");
-			String masterPassword = scanner.nextLine();
-			if(masterPassword.equals(masterManager.load())) {
-				System.out.println("認証成功");
-			} else {
-				System.out.println("認証失敗");
+			if(!authenticateMasterPassword(scanner, masterManager)) {
 				scanner.close();
 				return;
 			}
@@ -51,13 +43,14 @@ public class Main {
 			System.out.println("5. 削除");
 			System.out.println("6. サービス一覧");
 			System.out.println("7. パスワード生成");
-			System.out.println("8. 終了");
+			System.out.println("8. マスターパスワード変更");
+			System.out.println("9. 終了");
 			System.out.println("選択してください:");
 			
 			try {	
 				menu = Integer.parseInt(scanner.nextLine());
 			} catch (NumberFormatException e) {
-				System.out.println("数字(1-8)を入力してください");
+				System.out.println("数字(1-9)を入力してください");
 				continue;
 			}
 			
@@ -89,19 +82,66 @@ public class Main {
 			case 7:
 				generatePassword(scanner, generator, manager);
 				break;
-			
+				
 			case 8:
+				changeMasterPassword(scanner, masterManager);
+				break;
+			
+			case 9:
 				fileManager.save(manager.getEntries());
 				System.out.println("終了します。");
 				scanner.close();
 				return;
 			
 			default:
-				System.out.println("1-8を入力してください。");
+				System.out.println("1-9を入力してください。");
 			}
 			
 			System.out.println();
 		}
+	}
+	
+	private static boolean authenticateMasterPassword(Scanner scanner, MasterPasswordManager masterManager) {
+		int count = 3;
+		while(true) {
+			System.out.print("マスターパスワード: ");
+			String masterPassword = scanner.nextLine();
+			
+			if(masterManager.authenticate(masterPassword)) {
+				System.out.println("認証成功");
+				System.out.println();
+				return true;
+			} 
+			count--;
+			System.out.println("認証失敗（残り" + count +"回）");
+			if(count == 0) {
+				scanner.close();
+				return false;
+			}
+		}
+	}
+	
+	private static String inputNewMasterPassword(Scanner scanner) {
+		while(true) {
+			System.out.print("新しいマスターパスワード: ");
+			String password = scanner.nextLine();
+			System.out.println();
+			
+			System.out.println("確認のためもう一度入力してください。");
+			String confirmPassword = scanner.nextLine();
+			if(password.equals(confirmPassword)) {
+				return password;
+			} 
+			System.out.println("一致しません。");
+		}
+	}
+	
+	private static void changeMasterPassword(Scanner scanner, MasterPasswordManager masterManager) {
+		if(authenticateMasterPassword(scanner, masterManager)){
+			String password = inputNewMasterPassword(scanner);
+			masterManager.save(password);
+			System.out.println("変更しました。"); 
+		} 
 	}
 	
 	private static void registerPassword(Scanner scanner, PasswordManager manager) {
@@ -293,5 +333,4 @@ public class Main {
 			System.out.println("数字を入力してください");
 		}
 	}
-	
 }

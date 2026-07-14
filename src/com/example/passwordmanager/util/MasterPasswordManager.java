@@ -15,7 +15,8 @@ public class MasterPasswordManager {
 	
 	public void save(String password) {
 		try (FileWriter writer = new FileWriter("master.txt")){
-			writer.write(password);
+			String hashedPassword = PasswordHasher.hash(password);
+			writer.write(hashedPassword);
 			System.out.println("保存しました。");
 		} catch (IOException e) {
 			System.out.println("保存に失敗しました。");
@@ -29,5 +30,12 @@ public class MasterPasswordManager {
 			System.out.println("保存データがありません。");
 			return null;
 		}
+	}
+	
+	public boolean authenticate(String password) {
+		String hashedPassword = PasswordHasher.hash(password);
+		String savedPassword = load();
+		
+		return hashedPassword.equals(savedPassword);
 	}
 }
