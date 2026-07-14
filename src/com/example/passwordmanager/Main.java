@@ -35,17 +35,7 @@ public class Main {
 		int menu = -1;
 		
 		while(true) {
-			System.out.println("==== パスワード管理ツール ====");
-			System.out.println("1. 登録");
-			System.out.println("2. 一覧表示");
-			System.out.println("3. 検索");
-			System.out.println("4. 更新");
-			System.out.println("5. 削除");
-			System.out.println("6. サービス一覧");
-			System.out.println("7. パスワード生成");
-			System.out.println("8. マスターパスワード変更");
-			System.out.println("9. 終了");
-			System.out.println("選択してください:");
+			displayMenu();
 			
 			try {	
 				menu = Integer.parseInt(scanner.nextLine());
@@ -142,6 +132,20 @@ public class Main {
 			masterManager.save(password);
 			System.out.println("変更しました。"); 
 		} 
+	}
+	
+	private static void displayMenu() {
+		System.out.println("==== パスワード管理ツール ====");
+		System.out.println("1. 登録");
+		System.out.println("2. 一覧表示");
+		System.out.println("3. 検索");
+		System.out.println("4. 更新");
+		System.out.println("5. 削除");
+		System.out.println("6. サービス一覧");
+		System.out.println("7. パスワード生成");
+		System.out.println("8. マスターパスワード変更");
+		System.out.println("9. 終了");
+		System.out.println("選択してください:");
 	}
 	
 	private static void registerPassword(Scanner scanner, PasswordManager manager) {
